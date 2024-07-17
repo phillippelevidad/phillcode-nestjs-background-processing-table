@@ -58,7 +58,7 @@ export class ProcessUsersJob {
         `More entries to process, scheduling next job with ${BATCH_DELAY}ms delay`,
       );
     } else {
-      this.processTracking.deleteRecords(JOB_NAME, job.data.sessionId);
+      await this.processTracking.deleteRecords(JOB_NAME, job.data.sessionId);
       this.logger.log(`Processing completed`);
     }
   }
@@ -116,7 +116,7 @@ export class ProcessUsersJob {
   protected async onQueueFailed(job: Job<JobData>, error: Error) {
     this.logger.error(`Job failed: ${error.message} ${error}`);
     if (job.attemptsMade === job.opts.attempts) {
-      this.processTracking.deleteRecords(JOB_NAME, job.data.sessionId);
+      await this.processTracking.deleteRecords(JOB_NAME, job.data.sessionId);
     }
   }
 }
